@@ -1,5 +1,6 @@
 const express= require('express')
 const cors=require('cors')
+require('dotenv').config()
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const app=express();
 const port =process.env.PORT || 5000;
@@ -7,10 +8,6 @@ const port =process.env.PORT || 5000;
 // MiddleWare
 app.use(cors())
 app.use(express.json())
-
-// luminaStore
-// O8Vk1WoC6VPcNzmy
-
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.he8foru.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -26,6 +23,16 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    const craftCollection=client.db('craftStore').collection('crafts')
+
+    app.post('/addCraft',async(req,res)=>{
+      console.log(req.body)
+      const result=await craftCollection.insertOne(req.body);
+      console.log(result)
+      res.send(result)
+    })
+  
+
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
@@ -33,7 +40,7 @@ async function run() {
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
