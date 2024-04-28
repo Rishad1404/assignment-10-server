@@ -51,7 +51,30 @@ async function run() {
       res.send(result)
     })
 
-    app.delete('/crafts/:id',async(req,res)=>{
+    app.put('/crafts/:id',async(req,res)=>{
+      const id=req.params.id;
+      const filter={_id:new ObjectId(id)}
+      const options ={upsert:true};
+      const updatedCraft=req.body;
+      const craft={
+        $set:{
+          name:updatedCraft.name,
+          itemName:updatedCraft.itemName,
+          photo:updatedCraft.photo,
+          subcategory:updatedCraft.subcategory,
+          rating:updatedCraft.rating,
+          price:updatedCraft.price,
+          description:updatedCraft.description,
+          customization:updatedCraft.customization,
+          processTime:updatedCraft.processTime,
+          status:updatedCraft.status
+        }
+      }
+      const result=await craftCollection.updateOne(filter,craft,options)
+      res.send(result)
+    })
+
+    app.delete('/myCrafts/:id',async(req,res)=>{
       const id=req.params.id;
       const query={_id:new ObjectId(id)}
       const result=await craftCollection.deleteOne(query)
