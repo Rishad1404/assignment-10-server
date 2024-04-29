@@ -38,6 +38,12 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/singleCraft/:id',async(req,res)=>{
+      console.log(req.params.id)
+      const result=await craftCollection.findOne({_id:new ObjectId(req.params.id)})
+      res.send(result)
+    })
+
     app.get('/myCraft/:email',async(req,res)=>{
       console.log(req.params.email)
       const result=await craftCollection.find({email:req.params.email}).toArray();
